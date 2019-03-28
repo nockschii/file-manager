@@ -1,0 +1,15 @@
+{
+    "name": "r.quidet/file-manager",
+    "type": "project",
+    "minimum-stability": "dev",
+    "require": {},
+    "require-dev" : {
+        "phpunit/phpunit" : "7.*"
+    },
+    "autoload": {
+        "psr-4" : {
+            "FileManager\\" : "src/",
+            "FileManagerTests\\" : "tests/"
+        }
+    }
+}
