@@ -38,10 +38,16 @@ class FileHandlerTest extends Testcase
     /**
      * @test
      */
-    public function cleanAndSortFiles_ReturnCleanedAndSortFiles()
+    public function getAllFilesFromDirectory_ReturnCleanedAndSortFiles()
     {
-        $files = $this->fileHandler->getAllFilesFromDirectory();
+        $expected = ["FirstFile.txt", "SecondFile.txt", "ThirdFile.txt"];
+        $allFiles = [".", "..", "SecondFile.txt","FirstFile.txt","ThirdFile.txt"];
+        $stub = $this->createMock(FileHandler::class);
+        $stub->method('getAllFilesFromDirectory')
+            ->willReturn($allFiles);
 
-        assertTrue(sort($files));
+        $sortedFiles = $this->fileHandler->cleanAndSortFiles($stub->getAllFilesFromDirectory());
+
+        $this->assertEquals($expected, $sortedFiles);
     }
 }
