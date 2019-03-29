@@ -48,6 +48,6 @@ class FileHandlerTest extends Testcase
 
         $sortedFiles = $this->fileHandler->cleanAndSortFiles($stub->getAllFilesFromDirectory());
 
-        $this->assertEquals($expected, $sortedFiles);
+        assertEquals($expected, $sortedFiles);
     }
 }

@@ -1,0 +1,55 @@
+<?php
+
+namespace FileManagerTests;
+
+use FileManager\Display;
+use FileManager\FileHandler;
+use PHPUnit\Framework\TestCase;
+
+class DisplayTest extends TestCase
+{
+    /**
+     * @var Display
+     */
+    private $display;
+
+    /**
+     * @var FileHandler
+     */
+    private $fileHandler;
+
+    public function setUp()
+    {
+        $this->fileHandler = new FileHandler();
+        $this->display = new Display($this->fileHandler);
+    }
+
+    /**
+     * @test
+     */
+    public function allFiles_ReturnStringToEcho_IfOneFileIsInDirectory()
+    {
+//        $mockFileHandler = $this->createMock(FileHandler::class);
+//        $mockFileHandler->method('getAllFilesFromDirectory')
+//            ->willReturn("FirstFile.txt","ThirdFile.txt");
+//
+//        $mockDisplay = $this->getMockBuilder(Display::class)
+//                    ->disableOriginalConstructor()
+//                    ->getMock();
+//
+//        $mockDisplay->allFiles = ["FirstFile.txt"];
+
+        $this->display->setAllFiles(["FirstFile.txt"]);
+        $actual = $this->display->allFiles();
+        $expected = "<p>FirstFile</p>";
+        assertEquals($expected, $actual);
+    }
+
+    public function allFilesReturnStringToEchoIfTwoFilesAreInDirectory()
+    {
+        $this->display->setAllFiles(["FirstFile.txt", "SecondFile.txt"]);
+        $actual = $this->display->allFiles();
+        $expected = "<p>FirstFile</p><p>SecondFile</p>";
+        assertEquals($expected, $actual);
+    }
+}
