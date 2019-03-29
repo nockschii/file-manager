@@ -41,7 +41,7 @@ class DisplayTest extends TestCase
 
         $this->display->setAllFiles(["FirstFile.txt"]);
         $actual = $this->display->allFiles();
-        $expected = "<p>FirstFile</p>";
+        $expected = "<p><a href=''>FirstFile</a></p>";
         assertEquals($expected, $actual);
     }
 
@@ -49,7 +49,7 @@ class DisplayTest extends TestCase
     {
         $this->display->setAllFiles(["FirstFile.txt", "SecondFile.txt"]);
         $actual = $this->display->allFiles();
-        $expected = "<p>FirstFile</p><p>SecondFile</p>";
+        $expected = "<p><a href=''>FirstFile</a></p><p><a href=''>SecondFile</a></p>";
         assertEquals($expected, $actual);
     }
 }

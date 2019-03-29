@@ -7,4 +7,12 @@ use FileManager\FileHandler;
 
 $display = new Display(new FileHandler);
 
-echo $display->allFiles();
+?>
+
+<html>
+    <body>
+        <?php echo $display->allFiles();
+        ?>
+    </body>
+</html>
+

@@ -19,7 +19,7 @@ class Display
         $displayString = "";
         foreach ($this->allFiles as $file) {
             $file = trim($file, '.txt');
-            $displayString .= "<p>{$file}</p>";
+            $displayString .= "<p><a href=''>{$file}</a></p>";
         }
         return $displayString;
     }
@@ -30,5 +30,10 @@ class Display
     public function setAllFiles(array $allFiles): void
     {
         $this->allFiles = $allFiles;
+    }
+
+    public function saveOnServer()
+    {
+        $_SERVER["uploads"] = $this->allFiles();
     }
 }
