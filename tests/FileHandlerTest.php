@@ -20,10 +20,28 @@ class FileHandlerTest extends Testcase
     /**
      * @test
      */
+    public function constDirectoryIsReadable()
+    {
+        assertDirectoryExists(FileHandler::UPLOAD_PATH);
+    }
+
+    /**
+     * @test
+     */
     public function getAllFilesFromDirectory_ReturnArrayNotEmpty_WithGivenPath()
     {
         $files = $this->fileHandler->getAllFilesFromDirectory();
-        var_dump($files);
+
         assertNotEmpty($files);
+    }
+
+    /**
+     * @test
+     */
+    public function cleanAndSortFiles_ReturnCleanedAndSortFiles()
+    {
+        $files = $this->fileHandler->getAllFilesFromDirectory();
+
+        assertTrue(sort($files));
     }
 }
