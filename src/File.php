@@ -23,6 +23,9 @@ class File
 
     public function setContent($content): void
     {
+        $openFile = fopen($this->path, "w");
+        fwrite($openFile, $content);
+        fclose($openFile);
         $this->content = $content;
     }
 
