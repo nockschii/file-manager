@@ -9,10 +9,10 @@ $display = new Display(new FileHandler);
 
 ?>
 
-<html>
+<html lang="en">
     <body>
-        <?php echo $display->allFiles();
-        ?>
+        <?php echo $display->allFiles(); ?>
+        <a href="content.php?src/uploads/1.txt">Click Here</a>
     </body>
 </html>
 

@@ -31,15 +31,18 @@ class DisplayTest extends TestCase
     {
         $this->display->setAllFiles(["FirstFile.txt"]);
         $actual = $this->display->allFiles();
-        $expected = "<p><a href=''>FirstFile</a></p>";
+        $expected = "<p><a href=''>FirstFile.txt</a></p>";
         assertEquals($expected, $actual);
     }
 
+    /**
+     * @test
+     */
     public function allFilesReturnStringToEchoIfTwoFilesAreInDirectory()
     {
         $this->display->setAllFiles(["FirstFile.txt", "SecondFile.txt"]);
         $actual = $this->display->allFiles();
-        $expected = "<p><a href=''>FirstFile</a></p><p><a href=''>SecondFile</a></p>";
+        $expected = "<p><a href=''>FirstFile.txt</a></p><p><a href=''>SecondFile.txt</a></p>";
         assertEquals($expected, $actual);
     }
 }

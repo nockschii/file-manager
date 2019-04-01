@@ -4,7 +4,6 @@ namespace FileManager;
 
 class Display
 {
-
     private $fileHandler;
     private $allFiles;
 

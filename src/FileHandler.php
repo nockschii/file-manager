@@ -9,8 +9,10 @@ class FileHandler
 
     public function getAllFilesFromDirectory()
     {
-        $this->allFiles = scandir(self::UPLOAD_PATH);
-        $this->allFiles = $this->cleanAndSortFiles($this->allFiles);
+        $allFileNames = scandir(self::UPLOAD_PATH);
+        $allFileNames = $this->cleanAndSortFiles($allFileNames);
+        $this->generateFiles($allFileNames);
+
         return $this->allFiles;
     }
 
@@ -21,5 +23,17 @@ class FileHandler
         array_values($allFiles);
         sort($allFiles);
         return $allFiles;
+    }
+
+    /**
+     * @param array $allFileNames
+     */
+    private function generateFiles(array $allFileNames)
+    {
+        foreach ($allFileNames as $fileName) {
+            $tmpFile = new File();
+            $tmpFile->init($fileName);
+            $this->allFiles[] = $tmpFile;
+        }
     }
 }

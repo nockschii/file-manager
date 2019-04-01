@@ -2,6 +2,7 @@
 
 namespace FileManagerTests;
 
+use FileManager\File;
 use FileManager\FileHandler;
 use PHPUnit\Framework\TestCase;
 
@@ -49,5 +50,14 @@ class FileHandlerTest extends Testcase
         $sortedFiles = $this->fileHandler->cleanAndSortFiles($stub->getAllFilesFromDirectory());
 
         assertEquals($expected, $sortedFiles);
+    }
+
+    /**
+     * @test
+     */
+    public function getAllFilesFromDirectory_ReturnArrayWithCorrectType()
+    {
+        $allFiles = $this->fileHandler->getAllFilesFromDirectory();
+        assertContainsOnlyInstancesOf(File::class,$allFiles);
     }
 }
