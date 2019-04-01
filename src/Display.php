@@ -44,6 +44,11 @@ class Display
                 $content = $file->getContent();
             }
         }
-        return "<p>".$content."</p>";
+        return $content;
+    }
+
+    public function saveContent(string $fileName, string $newContent)
+    {
+        $this->fileHandler->saveContent($fileName, $newContent);
     }
 }

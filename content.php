@@ -10,7 +10,13 @@ $display = new Display(new FileHandler);
 
 <html lang="en">
     <body>
-        <?php echo $display->displayFileContent($_GET["name"]); ?>
-        <button type="button" onclick="window.location.href='index.php'">Zurück</button>
+        <form action="content.php" method="post" id="contentform">
+            <textarea rows="30" cols="70" form="contentform" name="content">
+                <?php echo $display->displayFileContent($_GET["name"]); ?>
+            </textarea>
+        </form>
+        <button type="button" onclick="window.location.href='index.php'">Back To Start</button>
+        <button type="submit" onclick={$display->saveContent($_POST["name"], $_POST["content"])}>Save</button>
+        <button type="button">Cancel</button>
     </body>
 </html>

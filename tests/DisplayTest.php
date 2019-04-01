@@ -65,9 +65,8 @@ class DisplayTest extends TestCase
         $testFileOne = new File();
         $testFileOne->init("FirstFile.txt");
         $testFileOne->setContent("Test123");
-
         $this->display->setAllFiles([$testFileOne]);
 
-        assertEquals("<p>Test123</p>", $this->display->displayFileContent("FirstFile.txt"));
+        assertEquals("Test123", $this->display->displayFileContent("FirstFile.txt"));
     }
 }

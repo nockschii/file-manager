@@ -36,4 +36,22 @@ class FileHandler
             $this->allFiles[] = $tmpFile;
         }
     }
+
+    public function saveContent(string $fileName, string $newContent)
+    {
+        /** @var File $file */
+        foreach ($this->allFiles as $file) {
+            if ($file->getName() === $fileName){
+                $file->setContent($newContent);
+            }
+        }
+    }
+
+    /**
+     * @param array $allFiles
+     */
+    public function setAllFiles(array $allFiles): void
+    {
+        $this->allFiles = $allFiles;
+    }
 }

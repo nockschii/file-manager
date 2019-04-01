@@ -60,4 +60,19 @@ class FileHandlerTest extends Testcase
         $allFiles = $this->fileHandler->getAllFilesFromDirectory();
         assertContainsOnlyInstancesOf(File::class,$allFiles);
     }
+
+    /**
+     * @test
+     */
+    public function saveContent_GivenNameAndContent()
+    {
+        $testFile = new File();
+        $testFile->init("FirstFile.txt");
+        $testFile->setContent("Test");
+        $this->fileHandler->setAllFiles([$testFile]);
+
+        $this->fileHandler->saveContent("FirstFile.txt", "Test123");
+
+        assertEquals("Test123", $testFile->getContent());
+    }
 }
