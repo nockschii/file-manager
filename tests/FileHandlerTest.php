@@ -67,12 +67,36 @@ class FileHandlerTest extends Testcase
     public function saveContent_GivenNameAndContent()
     {
         $testFile = new File();
-        $testFile->init("FirstFile.txt");
-        $testFile->setContent("Test");
+        $this->initFilesForTesting($testFile);
+
         $this->fileHandler->setAllFiles([$testFile]);
 
         $this->fileHandler->saveContent("FirstFile.txt", "Test123");
 
         assertEquals("Test123", $testFile->getContent());
+    }
+
+    /**
+     * @test
+     */
+    public function renameFile_GivenName()
+    {
+        $testFile = new File();
+        $this->initFilesForTesting($testFile);
+        $this->fileHandler->setAllFiles([$testFile]);
+
+        $this->fileHandler->renameFile("FirstFile.txt", "RenamedFile.txt");
+
+        assertEquals("RenamedFile.txt", $testFile->getName());
+    }
+
+    /**
+     * @param File $testFile
+     */
+    private function initFilesForTesting(File $testFile): void
+    {
+        $testFile->setPath("FirstFile.txt");
+        $testFile->setName("FirstFile.txt");
+        $testFile->setContent("Test123");
     }
 }

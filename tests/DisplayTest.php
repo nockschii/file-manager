@@ -31,9 +31,11 @@ class DisplayTest extends TestCase
     public function allFiles_ReturnStringToEcho_IfOneFileIsInDirectory()
     {
         $testFile = new File();
-        $testFile->init("FirstFile.txt");
-
+        $this->initFilesForTesting($testFile);
         $this->display->setAllFiles([$testFile]);
+
+
+
         $actual = $this->display->allFiles();
 
         $expected = "<p><a href='content.php?name=FirstFile.txt'>FirstFile.txt</a></p>";
@@ -46,9 +48,14 @@ class DisplayTest extends TestCase
     public function allFilesReturnStringToEchoIfTwoFilesAreInDirectory()
     {
         $testFileOne = new File();
-        $testFileOne->init("FirstFile.txt");
+        $testFileOne->setPath("FirstFile.txt");
+        $testFileOne->setName("FirstFile.txt");
+        $testFileOne->setContent("Test123");
+
         $testFileTwo = new File();
-        $testFileTwo->init("SecondFile.txt");
+        $testFileTwo->setPath("SecondFile.txt");
+        $testFileTwo->setName("SecondFile.txt");
+        $testFileTwo->setContent("Test123");
 
         $this->display->setAllFiles([$testFileOne, $testFileTwo]);
         $actual = $this->display->allFiles();
@@ -62,11 +69,20 @@ class DisplayTest extends TestCase
      */
     public function displayFileContent_ReturnContentAsString_WithGivenFile()
     {
-        $testFileOne = new File();
-        $testFileOne->init("FirstFile.txt");
-        $testFileOne->setContent("Test123");
-        $this->display->setAllFiles([$testFileOne]);
+        $testFile = new File();
+        $this->initFilesForTesting($testFile);
+        $this->display->setAllFiles([$testFile]);
 
         assertEquals("Test123", $this->display->displayFileContent("FirstFile.txt"));
+    }
+
+    /**
+     * @param File $testFile
+     */
+    private function initFilesForTesting(File $testFile): void
+    {
+        $testFile->setPath("FirstFile.txt");
+        $testFile->setName("FirstFile.txt");
+        $testFile->setContent("Test123");
     }
 }
