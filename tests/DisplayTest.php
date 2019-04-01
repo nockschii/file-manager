@@ -29,16 +29,6 @@ class DisplayTest extends TestCase
      */
     public function allFiles_ReturnStringToEcho_IfOneFileIsInDirectory()
     {
-//        $mockFileHandler = $this->createMock(FileHandler::class);
-//        $mockFileHandler->method('getAllFilesFromDirectory')
-//            ->willReturn("FirstFile.txt","ThirdFile.txt");
-//
-//        $mockDisplay = $this->getMockBuilder(Display::class)
-//                    ->disableOriginalConstructor()
-//                    ->getMock();
-//
-//        $mockDisplay->allFiles = ["FirstFile.txt"];
-
         $this->display->setAllFiles(["FirstFile.txt"]);
         $actual = $this->display->allFiles();
         $expected = "<p><a href=''>FirstFile</a></p>";

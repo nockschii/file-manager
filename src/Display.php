@@ -18,7 +18,6 @@ class Display
     {
         $displayString = "";
         foreach ($this->allFiles as $file) {
-            $file = trim($file, '.txt');
             $displayString .= "<p><a href=''>{$file}</a></p>";
         }
         return $displayString;
