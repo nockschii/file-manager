@@ -25,9 +25,6 @@ class FileHandler
         return $allFiles;
     }
 
-    /**
-     * @param array $allFileNames
-     */
     private function generateFiles(array $allFileNames)
     {
         foreach ($allFileNames as $fileName) {
@@ -41,8 +38,30 @@ class FileHandler
     {
         /** @var File $file */
         foreach ($this->allFiles as $file) {
-            if ($file->getName() === $fileName){
+            if ($file->getName() === $fileName) {
                 $file->setContent($newContent);
+            }
+        }
+    }
+
+    public function addFile($newFile)
+    {
+        $this->allFiles[] = $newFile;
+    }
+
+    public function createFile($fileName)
+    {
+        $newFile = new File();
+        $newFile->init($fileName);
+        return $newFile;
+    }
+
+    public function renameFile($oldName, $newName)
+    {
+        /** @var File $file */
+        foreach ($this->allFiles as $file) {
+            if ($file->getName() === $oldName) {
+                $file->renameFile($newName);
             }
         }
     }

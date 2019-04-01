@@ -11,6 +11,10 @@ $display = new Display(new FileHandler());
 
 <html lang="en">
     <body>
+        <form action="renamed.php" method="post">
+            <input name="oldName" type="hidden" value="<?=$_GET["name"]?>">
+            <p><input name="newName" type="text" value="<?=$_GET["name"]?>"><button type="submit">Rename File</button></p>
+        </form>
         <form action="contentsaved.php" method="post">
             <textarea name="content" rows="30" cols="70">
                 <?php echo $display->displayFileContent($_GET["name"]); ?>

@@ -11,8 +11,8 @@ class File
     public function init($name)
     {
         $this->setName($name);
-        $this->setPath(FileHandler::UPLOAD_PATH.'/'.$name);
-        $tmpContent = file_get_contents(FileHandler::UPLOAD_PATH.'/'.$name);
+        $this->setPath(FileHandler::UPLOAD_PATH . '/' . $name);
+        $tmpContent = file_get_contents(FileHandler::UPLOAD_PATH . '/' . $name);
         $this->setContent($tmpContent);
     }
 
@@ -39,9 +39,15 @@ class File
         return $this->name;
     }
 
-    public function setName($name): void
+    public function setName($fileName): void
     {
-        $this->name = $name;
+        $this->name = $fileName;
+    }
+
+    public function renameFile($newName): void
+    {
+        rename($this->path,FileHandler::UPLOAD_PATH.'/'.$newName);
+        $this->name = $newName;
     }
 
     /**

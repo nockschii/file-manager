@@ -51,4 +51,9 @@ class Display
     {
         $this->fileHandler->saveContent($fileName, $newContent);
     }
+
+    public function renameFile($oldName, $newName)
+    {
+        $this->fileHandler->renameFile($oldName, $newName);
+    }
 }
