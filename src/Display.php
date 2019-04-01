@@ -16,9 +16,14 @@ class Display
     public function allFiles()
     {
         $displayString = "";
+        /** @var File $file */
         foreach ($this->allFiles as $file) {
-            $displayString .= "<p><a href=''>{$file}</a></p>";
+            $begin = '<p><a href=\'content.php?name=';
+            $tmpFileName = $file->getName();
+            $end = '\'>'.$file->getName().'</a></p>';
+            $displayString .= $begin.$tmpFileName.$end;
         }
+
         return $displayString;
     }
 
@@ -30,8 +35,15 @@ class Display
         $this->allFiles = $allFiles;
     }
 
-    public function saveOnServer()
+    public function displayFileContent($fileName): string
     {
-        $_SERVER["uploads"] = $this->allFiles();
+        $content = "";
+        /** @var File $file */
+        foreach ($this->allFiles as $file) {
+            if($file->getName() === $fileName){
+                $content = $file->getContent();
+            }
+        }
+        return "<p>".$content."</p>";
     }
 }

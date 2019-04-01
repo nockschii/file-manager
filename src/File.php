@@ -12,7 +12,7 @@ class File
     {
         $this->setName($name);
         $this->setPath(FileHandler::UPLOAD_PATH.'/'.$name);
-        $tmpContent = file_get_contents($this->path);
+        $tmpContent = file_get_contents(FileHandler::UPLOAD_PATH.'/'.$name);
         $this->setContent($tmpContent);
     }
 
