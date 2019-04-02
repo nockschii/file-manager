@@ -91,6 +91,16 @@ class FileHandler
         }
     }
 
+    public function renameFile($oldName, $newName)
+    {
+        /** @var File $file */
+        foreach ($this->allFiles as $file) {
+            if ($file->getName() === $oldName){
+                $file->renameFile($newName);
+            }
+        }
+    }
+
     /**
      * @param string $fileName
      * @param File $file
