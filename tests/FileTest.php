@@ -14,16 +14,18 @@ class FileTest extends TestCase
     public function setUp()
     {
         $this->fileHandler = new FileHandler();
-        $this->file = $this->fileHandler->createFile("TestFile.txt");
+        touch(FileHandler::UPLOAD_PATH.'/'.'TestFile.txt');
+        $this->file = new File();
     }
     
     /**
      * @test
      */
-    public function initFile_WithNameAndNotEmptyContent_AllPropertiesAreSet()
+    public function initialize_ValidFileName_AllPropertiesAreSet()
     {
-        $notEmpty[] = $this->file->getName();
-        $notEmpty[] = $this->file->getPath();
+        $this->file->initialize('TestFile.txt');
+        $notEmpty[] = $this->file->getFileName();
+        $notEmpty[] = $this->file->getFilePath();
         $notEmpty[] = $this->file->getContent();
 
         $this->assertCount(3, $notEmpty);
@@ -32,9 +34,10 @@ class FileTest extends TestCase
     /**
      * @test
      */
-    public function init_CorrectPath()
+    public function initialize_ValidFileName_ReturnCorrectPath()
     {
-        $this->assertEquals('C:\workspace\file-manager\src/uploads/TestFile.txt', $this->file->getPath());
+        $$this->file->initialize('TestFile.txt');
+        $this->assertEquals('C:\workspace\file-manager\src/uploads/TestFile.txt', $this->file->getFilePath());
     }
 
     public function tearDown()

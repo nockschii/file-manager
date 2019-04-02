@@ -4,31 +4,31 @@ namespace FileManager;
 
 class File
 {
-    private $name;
-    private $path;
+    private $fileName;
+    private $filePath;
     private $content;
 
-    public function initialize($name)
+    public function initialize($fileName)
     {
-        $this->setName($name);
-        $this->setPath(FileHandler::UPLOAD_PATH . '/' . $name);
-        $tmpContent = file_get_contents(FileHandler::UPLOAD_PATH . '/' . $name);
+        $this->setFileName($fileName);
+        $this->setFilePath(FileHandler::UPLOAD_PATH . '/' . $fileName);
+        $tmpContent = file_get_contents(FileHandler::UPLOAD_PATH . '/' . $fileName);
         $this->setContent($tmpContent);
     }
 
-    public function setName($fileName): void
+    public function setFileName($fileName): void
     {
-        $this->name = $fileName;
+        $this->fileName = $fileName;
     }
 
-    public function setPath($path): void
+    public function setFilePath($filePath): void
     {
-        $this->path = $path;
+        $this->filePath = $filePath;
     }
 
     public function setContent($content): void
     {
-        $openFile = fopen($this->path, "w");
+        $openFile = fopen($this->filePath, "w");
         fwrite($openFile, $content);
         fclose($openFile);
         $this->content = $content;
@@ -36,13 +36,13 @@ class File
 
     public function rename($newName): void
     {
-        rename($this->path,FileHandler::UPLOAD_PATH.'/'.$newName);
-        $this->name = $newName;
+        rename($this->filePath,FileHandler::UPLOAD_PATH.'/'.$newName);
+        $this->fileName = $newName;
     }
 
-    public function getName()
+    public function getFileName()
     {
-        return $this->name;
+        return $this->fileName;
     }
 
     public function getContent()
@@ -50,8 +50,8 @@ class File
         return $this->content;
     }
 
-    public function getPath()
+    public function getFilePath()
     {
-        return $this->path;
+        return $this->filePath;
     }
 }
