@@ -7,16 +7,16 @@ class FileHandler
     const UPLOAD_PATH = __DIR__ . "/uploads";
     private $allFiles = [];
 
-    public function getAllFilesFromDirectory()
+    public function getAllDirectoryEntries(): array
     {
-        $allFileNames = scandir(self::UPLOAD_PATH);
-        $allFileNames = $this->cleanAndSortFiles($allFileNames);
-        $this->generateFiles($allFileNames);
+        $allEntries = scandir(self::UPLOAD_PATH);
+        $allEntries = $this->cleanAndSortFiles($allEntries);
+        $this->initializeFilesAsObjects($allEntries);
 
         return $this->allFiles;
     }
 
-    public function cleanAndSortFiles($allFiles): array
+    public function cleanAndSortFiles(array $allFiles): array
     {
         unset($allFiles[0]);
         unset($allFiles[1]);
@@ -25,28 +25,13 @@ class FileHandler
         return $allFiles;
     }
 
-    private function generateFiles(array $allFileNames)
+    private function initializeFilesAsObjects(array $allFileNames): void
     {
         foreach ($allFileNames as $fileName) {
             $tmpFile = new File();
-            $tmpFile->init($fileName);
+            $tmpFile->initialize($fileName);
             $this->allFiles[] = $tmpFile;
         }
-    }
-
-    public function saveContent(string $fileName, string $newContent)
-    {
-        /** @var File $file */
-        foreach ($this->allFiles as $file) {
-            if ($file->getName() === $fileName) {
-                $file->setContent($newContent);
-            }
-        }
-    }
-
-    public function addFile($newFile)
-    {
-        $this->allFiles[] = $newFile;
     }
 
     /**
@@ -54,64 +39,99 @@ class FileHandler
      * @return File
      * @throws \Exception
      */
-    public function createFile($fileName)
+    public function createFile(string $fileName): File
     {
-        $path = $this->absolutePath($fileName);
-
-        if (file_exists($path)) {
-            throw new \Exception("File already exists.");
-        }
-
-        $newFile = new File();
-        touch($path);
-        $newFile->setName($fileName);
-        $newFile->setPath($path);
-        $this->addFile($newFile);
+        $path = $this->createDirectoryEntry($fileName);
+        $newFile = $this->addToAllFiles($fileName, $path);
         return $newFile;
-    }
-
-    public function renameFile($oldName, $newName)
-    {
-        /** @var File $file */
-        foreach ($this->allFiles as $file) {
-            if ($file->getName() === $oldName) {
-                $file->renameFile($newName);
-            }
-        }
-    }
-
-    /**
-     * @param array $allFiles
-     */
-    public function setAllFiles(array $allFiles): void
-    {
-        $this->allFiles = $allFiles;
-    }
-
-    public function deleteFile(string $fileName)
-    {
-        $path = $this->absolutePath($fileName);
-        if (file_exists($path)){
-            foreach ($this->allFiles as $file) {
-                if ($file->getName() === $fileName) {
-                    unset($this->allFiles,$file);
-                    if (!empty($this->allFiles))
-                    {
-                        array_values($this->allFiles);
-                    }
-                }
-            }
-            unlink($path);
-        }
     }
 
     /**
      * @param $fileName
      * @return string
+     * @throws \Exception
      */
-    private function absolutePath($fileName): string
+    private function createDirectoryEntry(string $fileName): string
+    {
+        $path = $this->absolutePath($fileName);
+        if (file_exists($path)) {
+            throw new \Exception("File already exists.");
+        }
+        touch($path);
+        return $path;
+    }
+
+    private function absolutePath(string $fileName): string
     {
         $path = FileHandler::UPLOAD_PATH . "/" . $fileName;
         return $path;
+    }
+
+    /**
+     * @param $fileName
+     * @param string $path
+     * @return File
+     */
+    private function addToAllFiles(string $fileName, string $path): File
+    {
+        $newFile = new File();
+        $newFile->setName($fileName);
+        $newFile->setPath($path);
+        $this->allFiles[] = $newFile;
+        return $newFile;
+    }
+
+    public function saveContent(string $fileName, string $newContent): void
+    {
+        /** @var File $file */
+        foreach ($this->allFiles as $file) {
+            if ($this->hasSameName($fileName, $file)) {
+                $file->setContent($newContent);
+            }
+        }
+    }
+
+    /**
+     * @param string $fileName
+     * @param File $file
+     * @return bool
+     */
+    private function hasSameName(string $fileName, File $file): bool
+    {
+        return ($file->getName() === $fileName) ? true : false;
+    }
+
+    public function renameFile($oldName, $newName): void
+    {
+        /** @var File $file */
+        foreach ($this->allFiles as $file) {
+            if ($this->hasSameName($oldName, $file)) {
+                $file->rename($newName);
+            }
+        }
+    }
+
+    public function deleteFile(string $fileName): void
+    {
+        $path = $this->absolutePath($fileName);
+        if (file_exists($path)){
+            $this->removeFileObject($fileName);
+            unlink($path);
+        }
+    }
+
+    private function removeFileObject(string $fileName): void
+    {
+        foreach ($this->allFiles as $file) {
+            if ($this->hasSameName($fileName, $file)) {
+                unset($this->allFiles, $file);
+                if (!empty($this->allFiles)) array_values($this->allFiles);
+            }
+        }
+    }
+
+    public function setAllFiles(array $allFiles): void
+    {
+        $this->allFiles = $allFiles;
     }
 }
