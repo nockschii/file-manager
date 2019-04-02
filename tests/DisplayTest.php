@@ -31,13 +31,13 @@ class DisplayTest extends TestCase
     public function allFiles_ReturnStringToEcho_IfOneFileIsInDirectory()
     {
         $testFile = new File();
-        $testFile->setName("FirstFile.txt");
+        $testFile->setName("TestFile.txt");
         $this->display->setAllFiles([$testFile]);
 
         $actual = $this->display->allFiles();
 
-        $expected = "<form action=\"deletefile.php?name=FirstFile.txt\"method=\"post\"><p><button name=\"name\" type=\"submit\" style=\"margin-right: 1em\">delete</button><a href='content.php?name=FirstFile.txt'>FirstFile.txt</a></p></form>";
-        assertEquals($expected, $actual);
+        $expected = "<form action=\"content/deletefile.php?name=TestFile.txt\"method=\"post\"><p><button name=\"name\" type=\"submit\" style=\"margin-right: 1em\">delete</button><a href='content/content.php?name=TestFile.txt'>TestFile.txt</a></p></form>";
+        $this->assertEquals($expected, $actual);
     }
 
     /**
@@ -46,14 +46,14 @@ class DisplayTest extends TestCase
     public function allFilesReturnStringToEchoIfTwoFilesAreInDirectory()
     {
         $testFileOne = new File();
-        $testFileOne->setName("FirstFile.txt");
+        $testFileOne->setName("TestFile.txt");
 
         $testFileTwo = new File();
-        $testFileTwo->setName("SecondFile.txt");
+        $testFileTwo->setName("TestFile2.txt");
         $this->display->setAllFiles([$testFileOne, $testFileTwo]);
 
-        $expected = "<form action=\"deletefile.php?name=FirstFile.txt\"method=\"post\"><p><button name=\"name\" type=\"submit\" style=\"margin-right: 1em\">delete</button><a href='content.php?name=FirstFile.txt'>FirstFile.txt</a></p></form><form action=\"deletefile.php?name=SecondFile.txt\"method=\"post\"><p><button name=\"name\" type=\"submit\" style=\"margin-right: 1em\">delete</button><a href='content.php?name=SecondFile.txt'>SecondFile.txt</a></p></form>";
-        assertEquals($expected, $this->display->allFiles());
+        $expected = "<form action=\"content/deletefile.php?name=TestFile.txt\"method=\"post\"><p><button name=\"name\" type=\"submit\" style=\"margin-right: 1em\">delete</button><a href='content/content.php?name=TestFile.txt'>TestFile.txt</a></p></form><form action=\"content/deletefile.php?name=TestFile2.txt\"method=\"post\"><p><button name=\"name\" type=\"submit\" style=\"margin-right: 1em\">delete</button><a href='content/content.php?name=TestFile2.txt'>TestFile2.txt</a></p></form>";
+        $this->assertEquals($expected, $this->display->allFiles());
     }
 
     /**
@@ -62,13 +62,16 @@ class DisplayTest extends TestCase
     public function displayFileContent_ReturnContentAsString_WithGivenFile()
     {
         $testFile = new File();
-        $testFile->setName("FirstFile.txt");
-        $testFile->setPath(FileHandler::UPLOAD_PATH."/"."FirstFile.txt");
+        $testFile->setName("TestFile.txt");
+        $testFile->setPath(FileHandler::UPLOAD_PATH."/"."TestFile.txt");
         $testFile->setContent("Test123");
         $this->display->setAllFiles([$testFile]);
 
-        assertEquals("Test123", $this->display->fileContent("FirstFile.txt"));
-        $this->fileHandler->deleteFile($testFile->getName());
+        $this->assertEquals("Test123", $this->display->fileContent("TestFile.txt"));
     }
 
+    public function tearDown()
+    {
+        $this->display->deleteFile("TestFile.txt");
+    }
 }

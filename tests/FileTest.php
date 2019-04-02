@@ -6,21 +6,27 @@ use PHPUnit\Framework\TestCase;
 
 class FileTest extends TestCase
 {
+    /** @var FileHandler */
+    private $fileHandler;
+    /** @var File */
+    private $file;
+
+    public function setUp()
+    {
+        $this->fileHandler = new FileHandler();
+        $this->file = $this->fileHandler->createFile("TestFile.txt");
+    }
+    
     /**
      * @test
      */
     public function initFile_WithNameAndNotEmptyContent_AllPropertiesAreSet()
     {
-        $fileHandler = new FileHandler();
-        $file = $fileHandler->createFile("Test.txt");
+        $notEmpty[] = $this->file->getName();
+        $notEmpty[] = $this->file->getPath();
+        $notEmpty[] = $this->file->getContent();
 
-
-        $notEmpty[] = $file->getName();
-        $notEmpty[] = $file->getPath();
-        $notEmpty[] = $file->getContent();
-
-        assertCount(3, $notEmpty);
-        $fileHandler->deleteFile($file->getName());
+        $this->assertCount(3, $notEmpty);
     }
 
     /**
@@ -28,10 +34,11 @@ class FileTest extends TestCase
      */
     public function init_CorrectPath()
     {
-        $fileHandler = new FileHandler();
-        $file = $fileHandler->createFile("Test.txt");
+        $this->assertEquals('C:\workspace\file-manager\src/uploads/TestFile.txt', $this->file->getPath());
+    }
 
-        assertEquals('C:\workspace\file-manager\src/uploads/Test.txt', $file->getPath());
-        $fileHandler->deleteFile($file->getName());
+    public function tearDown()
+    {
+        $this->fileHandler->deleteFile("TestFile.txt");
     }
 }

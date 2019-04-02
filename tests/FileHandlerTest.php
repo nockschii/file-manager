@@ -24,7 +24,7 @@ class FileHandlerTest extends Testcase
      */
     public function constDirectoryIsReadable()
     {
-        assertDirectoryExists(FileHandler::UPLOAD_PATH);
+        $this->assertDirectoryExists(FileHandler::UPLOAD_PATH);
     }
 
     /**
@@ -34,7 +34,7 @@ class FileHandlerTest extends Testcase
     {
         $files = $this->fileHandler->getAllDirectoryEntries();
 
-        assertNotEmpty($files);
+        $this->assertNotEmpty($files);
     }
 
     /**
@@ -50,7 +50,7 @@ class FileHandlerTest extends Testcase
 
         $sortedFiles = $this->fileHandler->cleanAndSortFiles($stub->getAllDirectoryEntries());
 
-        assertEquals($expected, $sortedFiles);
+        $this->assertEquals($expected, $sortedFiles);
     }
 
     /**
@@ -59,7 +59,7 @@ class FileHandlerTest extends Testcase
     public function getAllFilesFromDirectory_ReturnArrayWithCorrectType()
     {
         $allFiles = $this->fileHandler->getAllDirectoryEntries();
-        assertContainsOnlyInstancesOf(File::class,$allFiles);
+        $this->assertContainsOnlyInstancesOf(File::class,$allFiles);
     }
 
     /**
@@ -68,12 +68,11 @@ class FileHandlerTest extends Testcase
      */
     public function saveContent_GivenNameAndContent()
     {
-        $testFile = $this->fileHandler->createFile("Test.txt");
+        $testFile = $this->fileHandler->createFile("TestFile.txt");
 
-        $this->fileHandler->saveContent("Test.txt", "Test123");
+        $this->fileHandler->saveContent("TestFile.txt", "Test123");
 
-        assertEquals("Test123", $testFile->getContent());
-        $this->fileHandler->deleteFile("Test.txt");
+        $this->assertEquals("Test123", $testFile->getContent());
     }
 
     /**
@@ -82,13 +81,11 @@ class FileHandlerTest extends Testcase
      */
     public function renameFile_GivenName()
     {
-        $testFile = $this->fileHandler->createFile("TestFileCreatedForTests.txt");
-//        $this->fileHandler->addFile($testFile);
+        $testFile = $this->fileHandler->createFile("TestFile.txt");
 
-        $this->fileHandler->rename("TestFileCreatedForTests.txt", "RenamedFile.txt");
+        $this->fileHandler->renameFile("TestFile.txt", "RenamedFile.txt");
 
-        assertEquals("RenamedFile.txt", $testFile->getName());
-        $this->fileHandler->deleteFile($testFile->getName());
+        $this->assertEquals("RenamedFile.txt", $testFile->getName());
     }
 
     /**
@@ -97,9 +94,8 @@ class FileHandlerTest extends Testcase
      */
     public function createFile_ReturnsFile_ThatExists()
     {
-        $file = $this->fileHandler->createFile("newFile.txt");
-        assertFileExists($file->getPath());
-        $this->fileHandler->deleteFile($file->getName());
+        $file = $this->fileHandler->createFile("TestFile.txt");
+        $this->assertFileExists($file->getPath());
     }
 
     /**
@@ -108,9 +104,8 @@ class FileHandlerTest extends Testcase
      */
     public function createFile_ReturnsFile_WithCorrectType()
     {
-        $file = $this->fileHandler->createFile("newFile.txt");
-        assertInstanceOf(File::class, $file);
-        $this->fileHandler->deleteFile($file->getName());
+        $file = $this->fileHandler->createFile("TestFile.txt");
+        $this->assertInstanceOf(File::class, $file);
     }
 
     /**
@@ -120,10 +115,8 @@ class FileHandlerTest extends Testcase
     public function createFile_ReturnFileWith_IfFileExists()
     {
         $this->expectException(Exception::class);
-        $file = $this->fileHandler->createFile("alreadyExists.txt");
-        $fileTwo = $this->fileHandler->createFile("alreadyExists.txt");
-        $this->fileHandler->deleteFile($file->getName());
-        $this->fileHandler->deleteFile($fileTwo->getName());
+        $this->fileHandler->createFile("TestFile.txt");
+        $this->fileHandler->createFile("TestFile.txt");
     }
 
     /**
@@ -132,9 +125,15 @@ class FileHandlerTest extends Testcase
      */
     public function deleteFile_ReturnsTrue_IfFileIsDeleted()
     {
-        $file = $this->fileHandler->createFile("deleteFile.txt");
+        $file = $this->fileHandler->createFile("TestFile.txt");
         $path = $file->getPath();
         $this->fileHandler->deleteFile($file->getName());
-        assertFileNotExists($path);
+        $this->assertFileNotExists($path);
+    }
+
+    public function tearDown()
+    {
+        $this->fileHandler->deleteFile("TestFile.txt");
+        $this->fileHandler->deleteFile("RenamedFile.txt");
     }
 }

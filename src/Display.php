@@ -31,9 +31,9 @@ class Display
      */
     private function convertToHtml(File $file): string
     {
-        $first = '<form action="deletefile.php';
+        $first = '<form action="content/deletefile.php';
         $second = "?name={$file->getName()}";
-        $third = '"method="post"><p><button name="name" type="submit" style="margin-right: 1em">delete</button><a href=\'content.php?name=';
+        $third = '"method="post"><p><button name="name" type="submit" style="margin-right: 1em">delete</button><a href=\'content/content.php?name=';
         $fourth = $file->getName();
         $fifth = '\'>' . $file->getName() . '</a></p></form>';
         $htmlText = $first . $second . $third . $fourth . $fifth;
@@ -57,7 +57,7 @@ class Display
         $this->fileHandler->saveContent($fileName, $newContent);
     }
 
-    public function renameFile($oldName, $newName): void
+    public function rename($oldName, $newName): void
     {
         $this->fileHandler->renameFile($oldName, $newName);
     }

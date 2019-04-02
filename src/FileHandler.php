@@ -96,7 +96,7 @@ class FileHandler
         /** @var File $file */
         foreach ($this->allFiles as $file) {
             if ($file->getName() === $oldName){
-                $file->renameFile($newName);
+                $file->rename($newName);
             }
         }
     }
@@ -109,16 +109,6 @@ class FileHandler
     private function hasSameName(string $fileName, File $file): bool
     {
         return ($file->getName() === $fileName) ? true : false;
-    }
-
-    public function rename($oldName, $newName): void
-    {
-        /** @var File $file */
-        foreach ($this->allFiles as $file) {
-            if ($this->hasSameName($oldName, $file)) {
-                $file->rename($newName);
-            }
-        }
     }
 
     public function deleteFile(string $fileName): void
