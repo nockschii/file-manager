@@ -32,7 +32,7 @@ class FileHandlerTest extends Testcase
      */
     public function getAllFilesFromDirectory_ReturnArrayNotEmpty_WithGivenPath()
     {
-        $files = $this->fileHandler->getAllFilesFromDirectory();
+        $files = $this->fileHandler->getAllDirectoryEntries();
 
         assertNotEmpty($files);
     }
@@ -45,10 +45,10 @@ class FileHandlerTest extends Testcase
         $expected = ["FirstFile.txt", "SecondFile.txt", "ThirdFile.txt"];
         $allFiles = [".", "..", "SecondFile.txt","FirstFile.txt","ThirdFile.txt"];
         $stub = $this->createMock(FileHandler::class);
-        $stub->method('getAllFilesFromDirectory')
+        $stub->method('getAllDirectoryEntries')
             ->willReturn($allFiles);
 
-        $sortedFiles = $this->fileHandler->cleanAndSortFiles($stub->getAllFilesFromDirectory());
+        $sortedFiles = $this->fileHandler->cleanAndSortFiles($stub->getAllDirectoryEntries());
 
         assertEquals($expected, $sortedFiles);
     }
@@ -58,7 +58,7 @@ class FileHandlerTest extends Testcase
      */
     public function getAllFilesFromDirectory_ReturnArrayWithCorrectType()
     {
-        $allFiles = $this->fileHandler->getAllFilesFromDirectory();
+        $allFiles = $this->fileHandler->getAllDirectoryEntries();
         assertContainsOnlyInstancesOf(File::class,$allFiles);
     }
 
