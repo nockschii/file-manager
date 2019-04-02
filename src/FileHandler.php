@@ -7,6 +7,11 @@ class FileHandler
     const UPLOAD_PATH = __DIR__ . "/uploads";
     private $allFiles = [];
 
+    public function __construct()
+    {
+        $this->allFiles = $this->getAllDirectoryEntries();
+    }
+
     public function getAllDirectoryEntries(): array
     {
         $allEntries = scandir(self::UPLOAD_PATH);
@@ -16,7 +21,7 @@ class FileHandler
         return $this->allFiles;
     }
 
-    public function cleanAndSortFiles(array $allFiles): array
+    private function cleanAndSortFiles(array $allFiles): array
     {
         unset($allFiles[0]);
         unset($allFiles[1]);
@@ -75,8 +80,8 @@ class FileHandler
     private function addToAllFiles(string $fileName, string $path): File
     {
         $newFile = new File();
-        $newFile->setName($fileName);
-        $newFile->setPath($path);
+        $newFile->setFileName($fileName);
+        $newFile->setFilePath($path);
         $this->allFiles[] = $newFile;
         return $newFile;
     }
@@ -95,7 +100,7 @@ class FileHandler
     {
         /** @var File $file */
         foreach ($this->allFiles as $file) {
-            if ($file->getName() === $oldName){
+            if ($file->getFileName() === $oldName){
                 $file->rename($newName);
             }
         }
@@ -108,19 +113,19 @@ class FileHandler
      */
     private function hasSameName(string $fileName, File $file): bool
     {
-        return ($file->getName() === $fileName) ? true : false;
+        return ($file->getFileName() === $fileName) ? true : false;
     }
 
     public function deleteFile(string $fileName): void
     {
         $path = $this->absolutePath($fileName);
         if (file_exists($path)){
-            $this->removeFileObject($fileName);
+            $this->removeFileObjectFromAllFiles($fileName);
             unlink($path);
         }
     }
 
-    private function removeFileObject(string $fileName): void
+    private function removeFileObjectFromAllFiles(string $fileName): void
     {
         foreach ($this->allFiles as $file) {
             if ($this->hasSameName($fileName, $file)) {
@@ -128,6 +133,11 @@ class FileHandler
                 if (!empty($this->allFiles)) array_values($this->allFiles);
             }
         }
+    }
+
+    public function getAllFiles(): array
+    {
+        return $this->allFiles;
     }
 
     public function setAllFiles(array $allFiles): void

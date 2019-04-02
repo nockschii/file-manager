@@ -26,48 +26,65 @@ class DisplayTest extends TestCase
     }
 
     /**
-     * @test
+     * @dataProvider allFilesDirectoryNotEmpty
+     * @test // MethodName_StateUnderTest_ExpectedBehavior
+     * @param $expected
+     * @param $fileNames
      */
-    public function allFiles_ReturnStringToEcho_IfOneFileIsInDirectory()
+    public function allFiles_DirectoryNotEmpty_ReturnsCorrectHtmlString($expected, $fileNames)
     {
-        $testFile = new File();
-        $testFile->setName("TestFile.txt");
-        $this->display->setAllFiles([$testFile]);
+        $setFilesForTest = [];
+        foreach ($fileNames as $testFile)
+        {
+            $tempFile = new File();
+            $tempFile->setFileName($testFile);
+            $setFilesForTest[] = $tempFile;
+        }
+        $this->fileHandler->setAllFiles($setFilesForTest);
 
-        $actual = $this->display->allFiles();
+        $htmlString = $this->display->allFiles();
 
-        $expected = "<form action=\"content/deletefile.php?name=TestFile.txt\"method=\"post\"><p><button name=\"name\" type=\"submit\" style=\"margin-right: 1em\">delete</button><a href='content/content.php?name=TestFile.txt'>TestFile.txt</a></p></form>";
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($expected, $htmlString);
+    }
+
+    /**
+     * dataProvider
+     * @return array
+     */
+    public function allFilesDirectoryNotEmpty()
+    {
+        return [
+            ["<form action=\"content/deletefile.php?name=TestFile.txt\"method=\"post\"><p><button name=\"name\" type=\"submit\" style=\"margin-right: 1em\">delete</button><a href='content/content.php?name=TestFile.txt'>TestFile.txt</a></p></form>", ["TestFile.txt"]],
+            ["<form action=\"content/deletefile.php?name=TestFile.txt\"method=\"post\"><p><button name=\"name\" type=\"submit\" style=\"margin-right: 1em\">delete</button><a href='content/content.php?name=TestFile.txt'>TestFile.txt</a></p></form><form action=\"content/deletefile.php?name=TestFile2.txt\"method=\"post\"><p><button name=\"name\" type=\"submit\" style=\"margin-right: 1em\">delete</button><a href='content/content.php?name=TestFile2.txt'>TestFile2.txt</a></p></form>", ["TestFile.txt", "TestFile2.txt"]]
+        ];
     }
 
     /**
      * @test
      */
-    public function allFilesReturnStringToEchoIfTwoFilesAreInDirectory()
+    public function allFiles_DirectoryEmpty_ReturnsNoFiles()
     {
-        $testFileOne = new File();
-        $testFileOne->setName("TestFile.txt");
+        $this->fileHandler->setAllFiles([]);
 
-        $testFileTwo = new File();
-        $testFileTwo->setName("TestFile2.txt");
-        $this->display->setAllFiles([$testFileOne, $testFileTwo]);
+        $htmlString = $this->display->allFiles();
 
-        $expected = "<form action=\"content/deletefile.php?name=TestFile.txt\"method=\"post\"><p><button name=\"name\" type=\"submit\" style=\"margin-right: 1em\">delete</button><a href='content/content.php?name=TestFile.txt'>TestFile.txt</a></p></form><form action=\"content/deletefile.php?name=TestFile2.txt\"method=\"post\"><p><button name=\"name\" type=\"submit\" style=\"margin-right: 1em\">delete</button><a href='content/content.php?name=TestFile2.txt'>TestFile2.txt</a></p></form>";
-        $this->assertEquals($expected, $this->display->allFiles());
+        $this->assertEquals("No files.", $htmlString);
     }
 
     /**
      * @test
      */
-    public function displayFileContent_ReturnContentAsString_WithGivenFile()
+    public function fileContent_ValidFileName_ReturnCorrectContent()
     {
         $testFile = new File();
-        $testFile->setName("TestFile.txt");
-        $testFile->setPath(FileHandler::UPLOAD_PATH."/"."TestFile.txt");
+        $testFile->setFileName("TestFile.txt");
+        $testFile->setFilePath(FileHandler::UPLOAD_PATH."/"."TestFile.txt");
         $testFile->setContent("Test123");
-        $this->display->setAllFiles([$testFile]);
+        $this->fileHandler->setAllFiles([$testFile]);
 
-        $this->assertEquals("Test123", $this->display->fileContent("TestFile.txt"));
+        $actualContent = $this->display->fileContent("TestFile.txt");
+
+        $this->assertEquals("Test123", $actualContent);
     }
 
     public function tearDown()

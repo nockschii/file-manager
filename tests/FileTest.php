@@ -19,7 +19,7 @@ class FileTest extends TestCase
     }
     
     /**
-     * @test
+     * @test // MethodName_StateUnderTest_ExpectedBehavior
      */
     public function initialize_ValidFileName_AllPropertiesAreSet()
     {
@@ -36,7 +36,7 @@ class FileTest extends TestCase
      */
     public function initialize_ValidFileName_ReturnCorrectPath()
     {
-        $$this->file->initialize('TestFile.txt');
+        $this->file->initialize('TestFile.txt');
         $this->assertEquals('C:\workspace\file-manager\src/uploads/TestFile.txt', $this->file->getFilePath());
     }
 

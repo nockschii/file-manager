@@ -40,17 +40,17 @@ class File
         $this->fileName = $newName;
     }
 
-    public function getFileName()
+    public function getFileName(): string
     {
         return $this->fileName;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
 
-    public function getFilePath()
+    public function getFilePath(): string
     {
         return $this->filePath;
     }

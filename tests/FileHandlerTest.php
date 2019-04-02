@@ -6,6 +6,7 @@ use Exception;
 use FileManager\File;
 use FileManager\FileHandler;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 class FileHandlerTest extends Testcase
 {
@@ -22,16 +23,17 @@ class FileHandlerTest extends Testcase
     /**
      * @test
      */
-    public function constDirectoryIsReadable()
+    public function UploadDirectoryExists()
     {
         $this->assertDirectoryExists(FileHandler::UPLOAD_PATH);
     }
 
     /**
-     * @test
+     * @test // MethodName_StateUnderTest_ExpectedBehavior
      */
-    public function getAllFilesFromDirectory_ReturnArrayNotEmpty_WithGivenPath()
+    public function getAllDirectoryEntries_DirectoryNotEmpty_ReturnNotEmptyArray()
     {
+        touch(FileHandler::UPLOAD_PATH.'/'."TestFile.txt");
         $files = $this->fileHandler->getAllDirectoryEntries();
 
         $this->assertNotEmpty($files);
@@ -40,23 +42,7 @@ class FileHandlerTest extends Testcase
     /**
      * @test
      */
-    public function getAllFilesFromDirectory_ReturnCleanedAndSortFiles()
-    {
-        $expected = ["FirstFile.txt", "SecondFile.txt", "ThirdFile.txt"];
-        $allFiles = [".", "..", "SecondFile.txt","FirstFile.txt","ThirdFile.txt"];
-        $stub = $this->createMock(FileHandler::class);
-        $stub->method('getAllDirectoryEntries')
-            ->willReturn($allFiles);
-
-        $sortedFiles = $this->fileHandler->cleanAndSortFiles($stub->getAllDirectoryEntries());
-
-        $this->assertEquals($expected, $sortedFiles);
-    }
-
-    /**
-     * @test
-     */
-    public function getAllFilesFromDirectory_ReturnArrayWithCorrectType()
+    public function getAllFilesFromDirectory_DirectoryNotEmpty_ArrayContainsFileObjects()
     {
         $allFiles = $this->fileHandler->getAllDirectoryEntries();
         $this->assertContainsOnlyInstancesOf(File::class,$allFiles);
@@ -64,9 +50,82 @@ class FileHandlerTest extends Testcase
 
     /**
      * @test
+     * @throws \ReflectionException
+     */
+    public function cleanAndSortFiles_DirectoryNotEmpty_ReturnsCorrectArray()
+    {
+        $filesToBeSorted = [".", "..", "SecondFile.txt","FirstFile.txt","ThirdFile.txt"];
+
+        $test = $this->invokeMethod($this->fileHandler, 'cleanAndSortFiles', [$filesToBeSorted]);
+
+        $expected = ["FirstFile.txt", "SecondFile.txt", "ThirdFile.txt"];
+        $this->assertEquals($expected, $test);
+    }
+
+    /**
+     * @param $object
+     * @param $methodName
+     * @param array $parameters
+     * @return \ReflectionMethod
+     * @throws \ReflectionException
+     */
+    public function invokeMethod(&$object, $methodName, array $parameters = array())
+    {
+        $reflection = new ReflectionClass(get_class($object));
+        $method = $reflection->getMethod($methodName);
+        $method->setAccessible(true);
+
+        return $method->invokeArgs($object, $parameters);
+    }
+
+
+    /**
+     * @test
      * @throws Exception
      */
-    public function saveContent_GivenNameAndContent()
+    public function createFile_ValidFileName_CreatesFileThatExistsInDirectory()
+    {
+        $file = $this->fileHandler->createFile("TestFile.txt");
+        $this->assertFileExists($file->getFilePath());
+    }
+
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function createFile_ValidFileName_IsAddedToAllFilesProperty()
+    {
+        $file = $this->fileHandler->createFile("TestFile.txt");
+
+        $this->assertContains($file, $this->fileHandler->getAllFiles());
+    }
+
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function createFile_ValidFileName_ReturnsCorrectInstance()
+    {
+        $file = $this->fileHandler->createFile("TestFile.txt");
+        $this->assertInstanceOf(File::class, $file);
+    }
+
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function createFile_FileNameAlreadyExists_ThrowsException()
+    {
+        $this->expectException(Exception::class);
+        $this->fileHandler->createFile("TestFile.txt");
+        $this->fileHandler->createFile("TestFile.txt");
+    }
+
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function saveContent_ValidParameters_ContentHasChanged()
     {
         $testFile = $this->fileHandler->createFile("TestFile.txt");
 
@@ -79,55 +138,26 @@ class FileHandlerTest extends Testcase
      * @test
      * @throws Exception
      */
-    public function renameFile_GivenName()
+    public function renameFile_ValidParameters_NameHasChanged()
     {
         $testFile = $this->fileHandler->createFile("TestFile.txt");
 
         $this->fileHandler->renameFile("TestFile.txt", "RenamedFile.txt");
 
-        $this->assertEquals("RenamedFile.txt", $testFile->getName());
+        $this->assertEquals("RenamedFile.txt", $testFile->getFileName());
     }
 
     /**
      * @test
      * @throws Exception
      */
-    public function createFile_ReturnsFile_ThatExists()
+    public function deleteFile_ValidFileName_FileDoesNotExist()
     {
         $file = $this->fileHandler->createFile("TestFile.txt");
-        $this->assertFileExists($file->getPath());
-    }
+        $path = $file->getFilePath();
 
-    /**
-     * @test
-     * @throws Exception
-     */
-    public function createFile_ReturnsFile_WithCorrectType()
-    {
-        $file = $this->fileHandler->createFile("TestFile.txt");
-        $this->assertInstanceOf(File::class, $file);
-    }
+        $this->fileHandler->deleteFile($file->getFileName());
 
-    /**
-     * @test
-     * @throws Exception
-     */
-    public function createFile_ReturnFileWith_IfFileExists()
-    {
-        $this->expectException(Exception::class);
-        $this->fileHandler->createFile("TestFile.txt");
-        $this->fileHandler->createFile("TestFile.txt");
-    }
-
-    /**
-     * @test
-     * @throws Exception
-     */
-    public function deleteFile_ReturnsTrue_IfFileIsDeleted()
-    {
-        $file = $this->fileHandler->createFile("TestFile.txt");
-        $path = $file->getPath();
-        $this->fileHandler->deleteFile($file->getName());
         $this->assertFileNotExists($path);
     }
 
