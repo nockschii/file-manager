@@ -49,10 +49,14 @@ class FileHandler
         $this->allFiles[] = $newFile;
     }
 
+    /**
+     * @param $fileName
+     * @return File
+     * @throws \Exception
+     */
     public function createFile($fileName)
     {
-        $fileName .= ".txt";
-        $path = FileHandler::UPLOAD_PATH."/".$fileName;
+        $path = $this->absolutePath($fileName);
 
         if (file_exists($path)) {
             throw new \Exception("File already exists.");
@@ -62,6 +66,7 @@ class FileHandler
         touch($path);
         $newFile->setName($fileName);
         $newFile->setPath($path);
+        $this->addFile($newFile);
         return $newFile;
     }
 
@@ -81,5 +86,35 @@ class FileHandler
     public function setAllFiles(array $allFiles): void
     {
         $this->allFiles = $allFiles;
+    }
+
+    public function deleteFile(string $fileName)
+    {
+        $path = $this->absolutePath($fileName);
+        if (file_exists($path)){
+            foreach ($this->allFiles as $file) {
+                if ($file->getName() === $fileName) {
+                    if (count($this->allFiles) === 1){
+                        $this->allFiles = [];
+                    }
+                    unset($this->allFiles,$file);
+                    if (!empty($this->allFiles))
+                    {
+                        array_values($this->allFiles);
+                    }
+                }
+            }
+            unlink($path);
+        }
+    }
+
+    /**
+     * @param $fileName
+     * @return string
+     */
+    private function absolutePath($fileName): string
+    {
+        $path = FileHandler::UPLOAD_PATH . "/" . $fileName;
+        return $path;
     }
 }

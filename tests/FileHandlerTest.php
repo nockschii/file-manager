@@ -66,14 +66,11 @@ class FileHandlerTest extends Testcase
      */
     public function saveContent_GivenNameAndContent()
     {
-        $testFile = new File();
-        $this->initFilesForTesting($testFile);
-
-        $this->fileHandler->setAllFiles([$testFile]);
-
-        $this->fileHandler->saveContent("FirstFile.txt", "Test123");
-
+        $testFile = $this->fileHandler->createFile("Test.txt");
+        $this->fileHandler->addFile($testFile);
+        $this->fileHandler->saveContent("Test.txt", "Test123");
         assertEquals("Test123", $testFile->getContent());
+        $this->fileHandler->deleteFile("Test.txt");
     }
 
     /**
@@ -81,12 +78,13 @@ class FileHandlerTest extends Testcase
      */
     public function renameFile_GivenName()
     {
-        $testFile = $this->fileHandler->createFile("TestFileCreatedForTests");
-        $this->fileHandler->addFile($testFile);
+        $testFile = $this->fileHandler->createFile("TestFileCreatedForTests.txt");
+//        $this->fileHandler->addFile($testFile);
 
         $this->fileHandler->renameFile("TestFileCreatedForTests.txt", "RenamedFile.txt");
 
         assertEquals("RenamedFile.txt", $testFile->getName());
+        $this->fileHandler->deleteFile($testFile->getName());
     }
 
     /**
@@ -94,8 +92,9 @@ class FileHandlerTest extends Testcase
      */
     public function createFile_ReturnsFile_ThatExists()
     {
-        $file = $this->fileHandler->createFile("newFile");
+        $file = $this->fileHandler->createFile("newFile.txt");
         assertFileExists($file->getPath());
+        $this->fileHandler->deleteFile($file->getName());
     }
 
     /**
@@ -103,8 +102,10 @@ class FileHandlerTest extends Testcase
      */
     public function createFile_ReturnsFile_WithCorrectType()
     {
-        $file = $this->fileHandler->createFile("newFile");
+        $file = $this->fileHandler->createFile("newFile.txt");
+        $this->fileHandler->addFile($file);
         assertInstanceOf(File::class, $file);
+        $this->fileHandler->deleteFile($file->getName());
     }
 
     /**
@@ -113,17 +114,20 @@ class FileHandlerTest extends Testcase
     public function createFile_ReturnFileWith_IfFileExists()
     {
         $this->expectException(\Exception::class);
-        $this->fileHandler->createFile("alreadyExists");
-        $this->fileHandler->createFile("alreadyExists");
+        $file = $this->fileHandler->createFile("alreadyExists.txt");
+        $fileTwo = $this->fileHandler->createFile("alreadyExists.txt");
+        $this->fileHandler->deleteFile($file->getName());
+        $this->fileHandler->deleteFile($fileTwo->getName());
     }
 
     /**
-     * @param File $testFile
+     * @test
      */
-    private function initFilesForTesting(File $testFile): void
+    public function deleteFile_ReturnsTrue_IfFileIsDeleted()
     {
-        $testFile->setPath("TestFileCreatedForTests.txt");
-        $testFile->setName("TestFileCreatedForTests.txt");
-        $testFile->setContent("Test123");
+        $file = $this->fileHandler->createFile("deleteFile.txt");
+        $path = $file->getPath();
+        $this->fileHandler->deleteFile($file->getName());
+        assertFileNotExists($path);
     }
 }

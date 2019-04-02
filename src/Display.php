@@ -56,4 +56,9 @@ class Display
     {
         $this->fileHandler->renameFile($oldName, $newName);
     }
+
+    public function deleteFile($fileName)
+    {
+        $this->fileHandler->deleteFile($fileName);
+    }
 }

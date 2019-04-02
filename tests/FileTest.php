@@ -12,14 +12,15 @@ class FileTest extends TestCase
     public function initFile_WithNameAndNotEmptyContent_AllPropertiesAreSet()
     {
         $fileHandler = new FileHandler();
-        $file = $fileHandler->createFile("Test");
-        $file->init("Test.txt");
+        $file = $fileHandler->createFile("Test.txt");
+
 
         $notEmpty[] = $file->getName();
         $notEmpty[] = $file->getPath();
         $notEmpty[] = $file->getContent();
 
         assertCount(3, $notEmpty);
+        $fileHandler->deleteFile($file->getName());
     }
 
     /**
@@ -27,9 +28,10 @@ class FileTest extends TestCase
      */
     public function init_CorrectPath()
     {
-        $file = new File();
-        $file->init("Test.txt");
+        $fileHandler = new FileHandler();
+        $file = $fileHandler->createFile("Test.txt");
 
         assertEquals('C:\workspace\file-manager\src/uploads/Test.txt', $file->getPath());
+        $fileHandler->deleteFile($file->getName());
     }
 }
