@@ -111,7 +111,7 @@ class FileHandler
         return ($file->getName() === $fileName) ? true : false;
     }
 
-    public function renameFile($oldName, $newName): void
+    public function rename($oldName, $newName): void
     {
         /** @var File $file */
         foreach ($this->allFiles as $file) {
