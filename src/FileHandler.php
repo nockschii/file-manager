@@ -51,8 +51,17 @@ class FileHandler
 
     public function createFile($fileName)
     {
+        $fileName .= ".txt";
+        $path = FileHandler::UPLOAD_PATH."/".$fileName;
+
+        if (file_exists($path)) {
+            throw new \Exception("File already exists.");
+        }
+
         $newFile = new File();
-        $newFile->init($fileName);
+        touch($path);
+        $newFile->setName($fileName);
+        $newFile->setPath($path);
         return $newFile;
     }
 

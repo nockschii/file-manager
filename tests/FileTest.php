@@ -1,6 +1,7 @@
 <?php
 
 use FileManager\File;
+use FileManager\FileHandler;
 use PHPUnit\Framework\TestCase;
 
 class FileTest extends TestCase
@@ -10,8 +11,10 @@ class FileTest extends TestCase
      */
     public function initFile_WithNameAndNotEmptyContent_AllPropertiesAreSet()
     {
-        $file = new File();
+        $fileHandler = new FileHandler();
+        $file = $fileHandler->createFile("Test");
         $file->init("Test.txt");
+
         $notEmpty[] = $file->getName();
         $notEmpty[] = $file->getPath();
         $notEmpty[] = $file->getContent();

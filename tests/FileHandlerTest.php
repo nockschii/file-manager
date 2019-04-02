@@ -16,7 +16,6 @@ class FileHandlerTest extends Testcase
     public function setUp()
     {
         $this->fileHandler = new FileHandler();
-
     }
 
     /**
@@ -82,12 +81,40 @@ class FileHandlerTest extends Testcase
      */
     public function renameFile_GivenName()
     {
-        $testFile = $this->fileHandler->createFile("TestFileCreatedForTests.txt");
+        $testFile = $this->fileHandler->createFile("TestFileCreatedForTests");
         $this->fileHandler->addFile($testFile);
 
         $this->fileHandler->renameFile("TestFileCreatedForTests.txt", "RenamedFile.txt");
 
         assertEquals("RenamedFile.txt", $testFile->getName());
+    }
+
+    /**
+     * @test
+     */
+    public function createFile_ReturnsFile_ThatExists()
+    {
+        $file = $this->fileHandler->createFile("newFile");
+        assertFileExists($file->getPath());
+    }
+
+    /**
+     * @test
+     */
+    public function createFile_ReturnsFile_WithCorrectType()
+    {
+        $file = $this->fileHandler->createFile("newFile");
+        assertInstanceOf(File::class, $file);
+    }
+
+    /**
+     * @test
+     */
+    public function createFile_ReturnFileWith_IfFileExists()
+    {
+        $this->expectException(\Exception::class);
+        $this->fileHandler->createFile("alreadyExists");
+        $this->fileHandler->createFile("alreadyExists");
     }
 
     /**
