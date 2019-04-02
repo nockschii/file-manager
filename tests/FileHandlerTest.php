@@ -2,6 +2,7 @@
 
 namespace FileManagerTests;
 
+use Exception;
 use FileManager\File;
 use FileManager\FileHandler;
 use PHPUnit\Framework\TestCase;
@@ -63,18 +64,21 @@ class FileHandlerTest extends Testcase
 
     /**
      * @test
+     * @throws Exception
      */
     public function saveContent_GivenNameAndContent()
     {
         $testFile = $this->fileHandler->createFile("Test.txt");
-        $this->fileHandler->addFile($testFile);
+
         $this->fileHandler->saveContent("Test.txt", "Test123");
+
         assertEquals("Test123", $testFile->getContent());
         $this->fileHandler->deleteFile("Test.txt");
     }
 
     /**
      * @test
+     * @throws Exception
      */
     public function renameFile_GivenName()
     {
@@ -89,6 +93,7 @@ class FileHandlerTest extends Testcase
 
     /**
      * @test
+     * @throws Exception
      */
     public function createFile_ReturnsFile_ThatExists()
     {
@@ -99,21 +104,22 @@ class FileHandlerTest extends Testcase
 
     /**
      * @test
+     * @throws Exception
      */
     public function createFile_ReturnsFile_WithCorrectType()
     {
         $file = $this->fileHandler->createFile("newFile.txt");
-        $this->fileHandler->addFile($file);
         assertInstanceOf(File::class, $file);
         $this->fileHandler->deleteFile($file->getName());
     }
 
     /**
      * @test
+     * @throws Exception
      */
     public function createFile_ReturnFileWith_IfFileExists()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $file = $this->fileHandler->createFile("alreadyExists.txt");
         $fileTwo = $this->fileHandler->createFile("alreadyExists.txt");
         $this->fileHandler->deleteFile($file->getName());
@@ -122,6 +128,7 @@ class FileHandlerTest extends Testcase
 
     /**
      * @test
+     * @throws Exception
      */
     public function deleteFile_ReturnsTrue_IfFileIsDeleted()
     {

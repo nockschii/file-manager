@@ -18,10 +18,12 @@ class Display
         $displayString = "";
         /** @var File $file */
         foreach ($this->allFiles as $file) {
-            $begin = '<p><a href=\'content.php?name=';
-            $tmpFileName = $file->getName();
-            $end = '\'>'.$file->getName().'</a></p>';
-            $displayString .= $begin.$tmpFileName.$end;
+            $first = '<form action="deletefile.php';
+            $second = "?name={$file->getName()}";
+            $third = '"method="post"><p><button name="name" type="submit" style="margin-right: 1em">delete</button><a href=\'content.php?name=';
+            $fourth = $file->getName();
+            $fifth = '\'>' . $file->getName() . '</a></p></form>';
+            $displayString .= $first . $second . $third . $fourth . $fifth;
         }
 
         return $displayString;
@@ -40,7 +42,7 @@ class Display
         $content = "";
         /** @var File $file */
         foreach ($this->allFiles as $file) {
-            if($file->getName() === $fileName){
+            if ($file->getName() === $fileName) {
                 $content = $file->getContent();
             }
         }

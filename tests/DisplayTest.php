@@ -31,7 +31,7 @@ class DisplayTest extends TestCase
     public function allFiles_ReturnStringToEcho_IfOneFileIsInDirectory()
     {
         $testFile = new File();
-        $this->initFilesForTesting($testFile);
+        $testFile->setName("FirstFile.txt");
         $this->display->setAllFiles([$testFile]);
 
 

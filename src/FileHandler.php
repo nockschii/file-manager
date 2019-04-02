@@ -94,9 +94,6 @@ class FileHandler
         if (file_exists($path)){
             foreach ($this->allFiles as $file) {
                 if ($file->getName() === $fileName) {
-                    if (count($this->allFiles) === 1){
-                        $this->allFiles = [];
-                    }
                     unset($this->allFiles,$file);
                     if (!empty($this->allFiles))
                     {
