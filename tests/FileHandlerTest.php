@@ -85,7 +85,7 @@ class FileHandlerTest extends Testcase
         $testFile = $this->fileHandler->createFile("TestFileCreatedForTests.txt");
 //        $this->fileHandler->addFile($testFile);
 
-        $this->fileHandler->renameFile("TestFileCreatedForTests.txt", "RenamedFile.txt");
+        $this->fileHandler->rename("TestFileCreatedForTests.txt", "RenamedFile.txt");
 
         assertEquals("RenamedFile.txt", $testFile->getName());
         $this->fileHandler->deleteFile($testFile->getName());
