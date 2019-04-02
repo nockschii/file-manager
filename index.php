@@ -14,7 +14,7 @@ $display = new Display(new FileHandler);
         <p>All Files: </p>
         <?php echo $display->allFiles(); ?>
         <hr size="1">
-        <p>New File (file-name.ext): </p>
+        <p>New File (TextFileName.ext): </p>
         <form action="newfile.php" method="post">
             <button type="submit" style="margin-right: 1em">create</button><input name="name" type="text" placeholder="TextFileName.ext">
         </form>
