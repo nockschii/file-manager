@@ -8,7 +8,7 @@ class File
     private $path;
     private $content;
 
-    public function init($name)
+    public function initialize($name)
     {
         $this->setName($name);
         $this->setPath(FileHandler::UPLOAD_PATH . '/' . $name);
@@ -16,9 +16,14 @@ class File
         $this->setContent($tmpContent);
     }
 
-    public function getContent()
+    public function setName($fileName): void
     {
-        return $this->content;
+        $this->name = $fileName;
+    }
+
+    public function setPath($path): void
+    {
+        $this->path = $path;
     }
 
     public function setContent($content): void
@@ -29,9 +34,10 @@ class File
         $this->content = $content;
     }
 
-    public function getPath()
+    public function rename($newName): void
     {
-        return $this->path;
+        rename($this->path,FileHandler::UPLOAD_PATH.'/'.$newName);
+        $this->name = $newName;
     }
 
     public function getName()
@@ -39,22 +45,13 @@ class File
         return $this->name;
     }
 
-    public function setName($fileName): void
+    public function getContent()
     {
-        $this->name = $fileName;
+        return $this->content;
     }
 
-    public function renameFile($newName): void
+    public function getPath()
     {
-        rename($this->path,FileHandler::UPLOAD_PATH.'/'.$newName);
-        $this->name = $newName;
-    }
-
-    /**
-     * @param mixed $path
-     */
-    public function setPath($path): void
-    {
-        $this->path = $path;
+        return $this->path;
     }
 }
