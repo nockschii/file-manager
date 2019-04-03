@@ -73,4 +73,10 @@ class ContentController
     {
         $this->fileHandler->createFile($fileName);
     }
+
+    public function filterFile($input): array
+    {
+        $matches = $this->fileHandler->filterFiles($input);
+        return $matches;
+    }
 }

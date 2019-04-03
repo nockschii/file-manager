@@ -139,4 +139,16 @@ class FileHandler
     {
         return $this->allFiles;
     }
+
+    public function filterFiles(string $input): array
+    {
+        $filterResult = [];
+        /** @var File $file */
+        foreach ($this->allFiles as $file) {
+            if (strpos($file->getFileName(), $input) !== false) {
+                $filterResult[] = $file->getFileName();
+            }
+        }
+        return $filterResult;
+    }
 }

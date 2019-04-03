@@ -33,7 +33,7 @@ class FileHandlerTest extends Testcase
      */
     public function getAllDirectoryEntries_DirectoryNotEmpty_ReturnNotEmptyArray()
     {
-        touch(FileHandler::UPLOAD_PATH.'/'."TestFile.txt");
+        touch(FileHandler::UPLOAD_PATH . '/' . "TestFile.txt");
         $files = $this->fileHandler->getAllDirectoryEntries();
 
         $this->assertNotEmpty($files);
@@ -45,7 +45,7 @@ class FileHandlerTest extends Testcase
     public function getAllFilesFromDirectory_DirectoryNotEmpty_ArrayContainsFileObjects()
     {
         $allFiles = $this->fileHandler->getAllDirectoryEntries();
-        $this->assertContainsOnlyInstancesOf(File::class,$allFiles);
+        $this->assertContainsOnlyInstancesOf(File::class, $allFiles);
     }
 
     /**
@@ -54,7 +54,7 @@ class FileHandlerTest extends Testcase
      */
     public function cleanAndSortFiles_DirectoryNotEmpty_ReturnsCorrectArray()
     {
-        $filesToBeSorted = [".", "..", "SecondFile.txt","FirstFile.txt","ThirdFile.txt"];
+        $filesToBeSorted = [".", "..", "SecondFile.txt", "FirstFile.txt", "ThirdFile.txt"];
 
         $test = $this->invokeMethod($this->fileHandler, 'cleanAndSortFiles', [$filesToBeSorted]);
 
@@ -161,9 +161,113 @@ class FileHandlerTest extends Testcase
         $this->assertFileNotExists($path);
     }
 
+    /**
+ * @test
+ * @throws Exception
+ */
+    public function filterFiles_1EntryInDirectory_Return1MatchedEntry()
+    {
+        $this->fileHandler->createFile("FilterFile.txt");
+
+        $filterResults = $this->fileHandler->filterFiles("File");
+
+        $this->assertEquals(["FilterFile.txt"], $filterResults);
+        $this->fileHandler->deleteFile("FilterFile.txt");
+    }
+
     public function tearDown()
     {
         $this->fileHandler->deleteFile("TestFile.txt");
         $this->fileHandler->deleteFile("RenamedFile.txt");
     }
 }
+
+# region nice-try#1
+///*/**
+// * @dataProvider filterFilesValidInput
+// * @test
+// * @param $fileNames
+// * @param $filterInput
+// * @param $expected
+// * @throws Exception
+// */
+//public function filterFiles_ValidInput_ReturnArrayWithCorrectFiles($fileNames, $filterInput, $expected)
+//{
+//    //        $mock = $this->getMockBuilder(FileHandler::class)
+////            ->disableOriginalConstructor()
+////            ->setMethods(["filterFiles"])
+////            ->getMock();
+////        $mock->allFiles = $fileNames;
+//    /***************************************************************/
+//    $toBeDeleted = [];
+//    foreach ($fileNames as $names) {
+//        $toBeDeleted[] = $this->fileHandler->createFile($names);
+//    }
+//
+//
+//    $filterResults = $this->fileHandler->filterFiles($filterInput);
+//
+//    $this->assertEquals($expected, $filterResults);
+//
+//    /** @var File $file */
+//    foreach ($toBeDeleted as $file) {
+//        $this->fileHandler->deleteFile($file->getFileName());
+//    }
+//}
+//
+///**
+// * dataProvider for filterFiles_ValidInput_ReturnArrayWithCorrectFiles()
+// */
+//public function filterFilesValidInput()
+//{
+//    return [
+//        [
+//            ["FilterFile.txt"],
+//            "File",
+//            ["FilterFile.txt"],
+//        ],
+//        [
+//            ["FilterFile.txt", "FilterFile2.txt"],
+//            "File",
+//            ["FilterFile.txt", "FilterFile2.txt"],
+//        ]
+//    ];
+//}*/
+# endregion#2
+
+#region next nice-try#2
+/**
+//     * @test
+//     * @throws Exception
+//     */
+//    public function filterFiles_2EntriesInDirectory_Return2MatchedEntry()
+//    {
+//        $this->fileHandler->createFile("FilterFile.txt");
+//        $this->fileHandler->createFile("FilterFile2.txt");
+//
+//        $filterResults = $this->fileHandler->filterFiles("File");
+//
+//        $this->assertEquals(["FilterFile.txt", "FilterFile2.txt"], $filterResults);
+//        $this->fileHandler->deleteFile("FilterFile.txt");
+//        $this->fileHandler->deleteFile("FilterFile2.txt");
+//    }
+//
+//    /**
+//     * @test
+//     * @throws Exception
+//     */
+//    public function filterFiles_3EntriesInDirectory_Return2MatchedEntry()
+//    {
+//        $this->fileHandler->createFile("FilterFile.txt");
+//        $this->fileHandler->createFile("FilterFile2.txt");
+//        $this->fileHandler->createFile("Filter.txt");
+//
+//        $filterResults = $this->fileHandler->filterFiles("File");
+//
+//        $this->assertEquals(["FilterFile.txt", "FilterFile2.txt"], $filterResults);
+//        $this->fileHandler->deleteFile("FilterFile.txt");
+//        $this->fileHandler->deleteFile("FilterFile2.txt");
+//        $this->fileHandler->deleteFile("Filter.txt");
+//    }
+
+#endregion
