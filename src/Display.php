@@ -29,8 +29,8 @@ class Display
      */
     private function convertToHtml(File $file): string
     {
-        $first = '<form action="content/deletefile.php';
-        $second = "?name={$file->getFileName()}";
+        $first = '<form action="content/actiondone.php';
+        $second = "?name={$file->getFileName()}&method=delete";
         $third = '"method="post"><p><button name="name" type="submit" style="margin-right: 1em">delete</button><a href=\'content/content.php?name=';
         $fourth = $file->getFileName();
         $fifth = '\'>' . $file->getFileName() . '</a></p></form>';

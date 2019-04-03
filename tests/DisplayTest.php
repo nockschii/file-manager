@@ -54,8 +54,12 @@ class DisplayTest extends TestCase
     public function allFilesDirectoryNotEmpty()
     {
         return [
-            ["<form action=\"content/deletefile.php?name=TestFile.txt\"method=\"post\"><p><button name=\"name\" type=\"submit\" style=\"margin-right: 1em\">delete</button><a href='content/content.php?name=TestFile.txt'>TestFile.txt</a></p></form>", ["TestFile.txt"]],
-            ["<form action=\"content/deletefile.php?name=TestFile.txt\"method=\"post\"><p><button name=\"name\" type=\"submit\" style=\"margin-right: 1em\">delete</button><a href='content/content.php?name=TestFile.txt'>TestFile.txt</a></p></form><form action=\"content/deletefile.php?name=TestFile2.txt\"method=\"post\"><p><button name=\"name\" type=\"submit\" style=\"margin-right: 1em\">delete</button><a href='content/content.php?name=TestFile2.txt'>TestFile2.txt</a></p></form>", ["TestFile.txt", "TestFile2.txt"]]
+            ["<form action=\"content/actiondone.php?name=TestFile.txt&method=delete\"method=\"post\"><p><button name=\"name\" type=\"submit\" style=\"margin-right: 1em\">delete</button><a href='content/content.php?name=TestFile.txt'>TestFile.txt</a></p></form>",
+                ["TestFile.txt"]
+            ],
+            ["<form action=\"content/actiondone.php?name=TestFile.txt&method=delete\"method=\"post\"><p><button name=\"name\" type=\"submit\" style=\"margin-right: 1em\">delete</button><a href='content/content.php?name=TestFile.txt'>TestFile.txt</a></p></form><form action=\"content/actiondone.php?name=TestFile2.txt&method=delete\"method=\"post\"><p><button name=\"name\" type=\"submit\" style=\"margin-right: 1em\">delete</button><a href='content/content.php?name=TestFile2.txt'>TestFile2.txt</a></p></form>",
+                ["TestFile.txt", "TestFile2.txt"]
+            ]
         ];
     }
 
