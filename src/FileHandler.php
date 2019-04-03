@@ -139,9 +139,4 @@ class FileHandler
     {
         return $this->allFiles;
     }
-
-    public function setAllFiles(array $allFiles): void
-    {
-        $this->allFiles = $allFiles;
-    }
 }

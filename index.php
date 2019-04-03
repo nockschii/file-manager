@@ -2,17 +2,17 @@
 
 require_once("vendor/autoload.php");
 
-use FileManager\Display;
+use FileManager\ContentController;
 use FileManager\FileHandler;
 
-$display = new Display(new FileHandler);
+$controller = new ContentController(new FileHandler);
 
 ?>
 
 <html lang="en">
     <body>
         <p>All Files: </p>
-        <?php echo $display->allFiles(); ?>
+        <?php echo $controller->displayAllFiles(); ?>
         <hr size="1">
         <p>New File (TextFileName.ext): </p>
         <form action="content/actiondone.php?method=create" method="post">

@@ -1,18 +1,19 @@
 <?php
-
+// MethodName_StateUnderTest_ExpectedBehavior
 namespace FileManagerTests;
 
-use FileManager\Display;
+use FileManager\ContentController;
 use FileManager\File;
 use FileManager\FileHandler;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
-class DisplayTest extends TestCase
+class ContentControllerTest extends TestCase
 {
     /**
-     * @var Display
+     * @var ContentController
      */
-    private $display;
+    private $controller;
 
     /**
      * @var FileHandler
@@ -22,16 +23,17 @@ class DisplayTest extends TestCase
     public function setUp()
     {
         $this->fileHandler = new FileHandler();
-        $this->display = new Display($this->fileHandler);
+        $this->controller = new ContentController($this->fileHandler);
     }
 
     /**
-     * @dataProvider allFilesDirectoryNotEmpty
-     * @test // MethodName_StateUnderTest_ExpectedBehavior
+     * @dataProvider displayAllFilesDirectoryNotEmpty
+     * @test
      * @param $expected
      * @param $fileNames
+     * @throws \ReflectionException
      */
-    public function allFiles_DirectoryNotEmpty_ReturnsCorrectHtmlString($expected, $fileNames)
+    public function displayAllFiles_DirectoryNotEmpty_ReturnsCorrectHtmlString($expected, $fileNames)
     {
         $setFilesForTest = [];
         foreach ($fileNames as $testFile)
@@ -40,9 +42,11 @@ class DisplayTest extends TestCase
             $tempFile->setFileName($testFile);
             $setFilesForTest[] = $tempFile;
         }
-        $this->fileHandler->setAllFiles($setFilesForTest);
+        $reflectionProperty = $this->getReflectionProperty($this->fileHandler, 'allFiles');
+        $reflectionProperty->setValue($this->fileHandler, $setFilesForTest);
+        //$this->fileHandler->setAllFiles($setFilesForTest);
 
-        $htmlString = $this->display->allFiles();
+        $htmlString = $this->controller->displayAllFiles();
 
         $this->assertEquals($expected, $htmlString);
     }
@@ -51,7 +55,7 @@ class DisplayTest extends TestCase
      * dataProvider
      * @return array
      */
-    public function allFilesDirectoryNotEmpty()
+    public function displayAllFilesDirectoryNotEmpty()
     {
         return [
             ["<form action=\"content/actiondone.php?name=TestFile.txt&method=delete\"method=\"post\"><p><button name=\"name\" type=\"submit\" style=\"margin-right: 1em\">delete</button><a href='content/content.php?name=TestFile.txt'>TestFile.txt</a></p></form>",
@@ -65,34 +69,53 @@ class DisplayTest extends TestCase
 
     /**
      * @test
+     * @throws \ReflectionException
      */
-    public function allFiles_DirectoryEmpty_ReturnsNoFiles()
+    public function displayAllFiles_DirectoryEmpty_ReturnsNoFiles()
     {
-        $this->fileHandler->setAllFiles([]);
+        $reflectionProperty = $this->getReflectionProperty($this->fileHandler, 'allFiles');
+        $reflectionProperty->setValue($this->fileHandler, []);
 
-        $htmlString = $this->display->allFiles();
+        $htmlString = $this->controller->displayAllFiles();
 
         $this->assertEquals("No files.", $htmlString);
     }
 
     /**
      * @test
+     * @throws \ReflectionException
      */
-    public function fileContent_ValidFileName_ReturnCorrectContent()
+    public function getFileContent_ValidFileName_ReturnCorrectContent()
     {
         $testFile = new File();
         $testFile->setFileName("TestFile.txt");
         $testFile->setFilePath(FileHandler::UPLOAD_PATH."/"."TestFile.txt");
         $testFile->setContent("Test123");
-        $this->fileHandler->setAllFiles([$testFile]);
+        $reflectionProperty = $this->getReflectionProperty($this->fileHandler, 'allFiles');
+        $reflectionProperty->setValue($this->fileHandler, [$testFile]);
 
-        $actualContent = $this->display->fileContent("TestFile.txt");
+        $actualContent = $this->controller->getFileContent("TestFile.txt");
 
         $this->assertEquals("Test123", $actualContent);
     }
 
+    /**
+     * @param $object
+     * @param $propertyName
+     * @return \ReflectionProperty
+     * @throws \ReflectionException
+     */
+    public function getReflectionProperty(&$object, $propertyName)
+    {
+        $reflection = new ReflectionClass(get_class($object));
+        $reflectionProperty = $reflection->getProperty($propertyName);
+        $reflectionProperty->setAccessible(true);
+
+        return $reflectionProperty;
+    }
+
     public function tearDown()
     {
-        $this->display->deleteFile("TestFile.txt");
+        $this->controller->deleteFile("TestFile.txt");
     }
 }

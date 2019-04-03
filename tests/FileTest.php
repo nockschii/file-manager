@@ -1,5 +1,5 @@
 <?php
-
+// MethodName_StateUnderTest_ExpectedBehavior
 use FileManager\File;
 use FileManager\FileHandler;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +19,7 @@ class FileTest extends TestCase
     }
     
     /**
-     * @test // MethodName_StateUnderTest_ExpectedBehavior
+     * @test
      */
     public function initialize_ValidFileName_AllPropertiesAreSet()
     {

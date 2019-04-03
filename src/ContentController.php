@@ -2,7 +2,7 @@
 
 namespace FileManager;
 
-class Display
+class ContentController
 {
     private $fileHandler;
 
@@ -11,7 +11,7 @@ class Display
         $this->fileHandler = $fileHandler;
     }
 
-    public function allFiles(): string
+    public function displayAllFiles(): string
     {
         $htmlText = "";
         /** @var File $file */
@@ -38,7 +38,7 @@ class Display
         return $htmlText;
     }
 
-    public function fileContent($fileName): string
+    public function getFileContent($fileName): string
     {
         $content = "";
         /** @var File $file */
@@ -47,7 +47,7 @@ class Display
                 $content = $file->getContent();
             }
         }
-        return $content;
+        return rtrim($content);
     }
 
     public function saveContent(string $fileName, string $newContent): void

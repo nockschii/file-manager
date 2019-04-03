@@ -1,5 +1,5 @@
 <?php
-
+// MethodName_StateUnderTest_ExpectedBehavior
 namespace FileManagerTests;
 
 use Exception;
@@ -29,7 +29,7 @@ class FileHandlerTest extends Testcase
     }
 
     /**
-     * @test // MethodName_StateUnderTest_ExpectedBehavior
+     * @test
      */
     public function getAllDirectoryEntries_DirectoryNotEmpty_ReturnNotEmptyArray()
     {

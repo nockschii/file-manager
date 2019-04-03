@@ -2,10 +2,11 @@
 
 require_once("../vendor/autoload.php");
 
-use FileManager\Display;
+use FileManager\ContentController;
 use FileManager\FileHandler;
 
-$display = new Display(new FileHandler());
+$controller = new ContentController(new FileHandler());
+
 ?>
 
 <html lang="en">
@@ -17,8 +18,8 @@ $display = new Display(new FileHandler());
 </form>
 <!-- Save -->
 <form action="actiondone.php?method=save" method="post">
-            <textarea name="content" rows="30" cols="70">
-                <?php echo $display->fileContent($_GET["name"]); ?>
+            <textarea name="content" style="text-align:left;"  rows="30" cols="70">
+                <?php echo $controller->getFileContent($_GET["name"]);?>
             </textarea>
     <br>
     <input name="name" type="hidden" value="<?=$_GET["name"]?>">
