@@ -36,15 +36,13 @@ class ContentControllerTest extends TestCase
     public function displayAllFiles_DirectoryNotEmpty_ReturnsCorrectHtmlString($expected, $fileNames)
     {
         $setFilesForTest = [];
-        foreach ($fileNames as $testFile)
-        {
+        foreach ($fileNames as $testFile) {
             $tempFile = new File();
             $tempFile->setFileName($testFile);
             $setFilesForTest[] = $tempFile;
         }
         $reflectionProperty = $this->getReflectionProperty($this->fileHandler, 'allFiles');
         $reflectionProperty->setValue($this->fileHandler, $setFilesForTest);
-        //$this->fileHandler->setAllFiles($setFilesForTest);
 
         $htmlString = $this->controller->displayAllFiles();
 
@@ -89,7 +87,7 @@ class ContentControllerTest extends TestCase
     {
         $testFile = new File();
         $testFile->setFileName("TestFile.txt");
-        $testFile->setFilePath(FileHandler::UPLOAD_PATH."/"."TestFile.txt");
+        $testFile->setFilePath(FileHandler::UPLOAD_PATH . "/" . "TestFile.txt");
         $testFile->setContent("Test123");
         $reflectionProperty = $this->getReflectionProperty($this->fileHandler, 'allFiles');
         $reflectionProperty->setValue($this->fileHandler, [$testFile]);
@@ -105,7 +103,7 @@ class ContentControllerTest extends TestCase
      * @return \ReflectionProperty
      * @throws \ReflectionException
      */
-    public function getReflectionProperty(&$object, $propertyName)
+    private function getReflectionProperty(&$object, $propertyName)
     {
         $reflection = new ReflectionClass(get_class($object));
         $reflectionProperty = $reflection->getProperty($propertyName);

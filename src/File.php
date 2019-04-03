@@ -36,7 +36,7 @@ class File
 
     public function rename($newName): void
     {
-        rename($this->filePath,FileHandler::UPLOAD_PATH.'/'.$newName);
+        rename($this->filePath, FileHandler::UPLOAD_PATH . '/' . $newName);
         $this->fileName = $newName;
     }
 

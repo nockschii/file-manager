@@ -42,7 +42,7 @@ class FileHandlerTest extends Testcase
     /**
      * @test
      */
-    public function getAllFilesFromDirectory_DirectoryNotEmpty_ArrayContainsFileObjects()
+    public function getAllFilesFromDirectory_DirectoryNotEmpty_ReturnsOnlyFileObjects()
     {
         $allFiles = $this->fileHandler->getAllDirectoryEntries();
         $this->assertContainsOnlyInstancesOf(File::class, $allFiles);
@@ -56,10 +56,10 @@ class FileHandlerTest extends Testcase
     {
         $filesToBeSorted = [".", "..", "SecondFile.txt", "FirstFile.txt", "ThirdFile.txt"];
 
-        $test = $this->invokeMethod($this->fileHandler, 'cleanAndSortFiles', [$filesToBeSorted]);
+        $correctedFiles = $this->invokeMethod($this->fileHandler, 'cleanAndSortFiles', [$filesToBeSorted]);
 
         $expected = ["FirstFile.txt", "SecondFile.txt", "ThirdFile.txt"];
-        $this->assertEquals($expected, $test);
+        $this->assertEquals($expected, $correctedFiles);
     }
 
     /**
@@ -69,7 +69,7 @@ class FileHandlerTest extends Testcase
      * @return \ReflectionMethod
      * @throws \ReflectionException
      */
-    public function invokeMethod(&$object, $methodName, array $parameters = array())
+    private function invokeMethod(&$object, $methodName, array $parameters = array())
     {
         $reflection = new ReflectionClass(get_class($object));
         $method = $reflection->getMethod($methodName);
@@ -81,11 +81,12 @@ class FileHandlerTest extends Testcase
 
     /**
      * @test
-     * @throws Exception
+     * @throws Exception,
      */
     public function createFile_ValidFileName_CreatesFileThatExistsInDirectory()
     {
         $file = $this->fileHandler->createFile("TestFile.txt");
+
         $this->assertFileExists($file->getFilePath());
     }
 
@@ -107,6 +108,7 @@ class FileHandlerTest extends Testcase
     public function createFile_ValidFileName_ReturnsCorrectInstance()
     {
         $file = $this->fileHandler->createFile("TestFile.txt");
+
         $this->assertInstanceOf(File::class, $file);
     }
 
@@ -162,9 +164,9 @@ class FileHandlerTest extends Testcase
     }
 
     /**
- * @test
- * @throws Exception
- */
+     * @test
+     * @throws Exception
+     */
     public function filterFiles_1EntryInDirectory_Return1MatchedEntry()
     {
         $this->fileHandler->createFile("FilterFile.txt");
@@ -237,9 +239,9 @@ class FileHandlerTest extends Testcase
 
 #region next nice-try#2
 /**
-//     * @test
-//     * @throws Exception
-//     */
+ * //     * @test
+ * //     * @throws Exception
+ * //     */
 //    public function filterFiles_2EntriesInDirectory_Return2MatchedEntry()
 //    {
 //        $this->fileHandler->createFile("FilterFile.txt");

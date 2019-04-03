@@ -14,10 +14,10 @@ class FileTest extends TestCase
     public function setUp()
     {
         $this->fileHandler = new FileHandler();
-        touch(FileHandler::UPLOAD_PATH.'/'.'TestFile.txt');
+        touch(FileHandler::UPLOAD_PATH . '/' . 'TestFile.txt');
         $this->file = new File();
     }
-    
+
     /**
      * @test
      */
@@ -37,6 +37,7 @@ class FileTest extends TestCase
     public function initialize_ValidFileName_ReturnCorrectPath()
     {
         $this->file->initialize('TestFile.txt');
+
         $this->assertEquals('C:\workspace\file-manager\src/uploads/TestFile.txt', $this->file->getFilePath());
     }
 

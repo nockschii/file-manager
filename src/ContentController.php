@@ -29,12 +29,10 @@ class ContentController
      */
     private function convertToHtml(File $file): string
     {
-        $first = '<form action="content/actiondone.php';
-        $second = "?name={$file->getFileName()}&method=delete";
-        $third = '"method="post"><p><button name="name" type="submit" style="margin-right: 1em">delete</button><a href=\'content/content.php?name=';
-        $fourth = $file->getFileName();
-        $fifth = '\'>' . $file->getFileName() . '</a></p></form>';
-        $htmlText = $first . $second . $third . $fourth . $fifth;
+        $action = '<form action="content/actiondone.php?name=' . $file->getFileName() . '&method=delete"method="post">';
+        $button = '<p><button name="name" type="submit" style="margin-right: 1em">delete</button>';
+        $name = '<a href=\'content/content.php?name=' . $file->getFileName() . '\'>' . $file->getFileName() . '</a></p></form>';
+        $htmlText = $action . $button . $name;
         return $htmlText;
     }
 
@@ -74,7 +72,8 @@ class ContentController
         $this->fileHandler->createFile($fileName);
     }
 
-    public function filterFile($input): array
+    // TODO Implement frontend
+    public function filterFiles($input): array
     {
         $matches = $this->fileHandler->filterFiles($input);
         return $matches;

@@ -100,7 +100,7 @@ class FileHandler
     {
         /** @var File $file */
         foreach ($this->allFiles as $file) {
-            if ($file->getFileName() === $oldName){
+            if ($file->getFileName() === $oldName) {
                 $file->rename($newName);
             }
         }
@@ -119,7 +119,7 @@ class FileHandler
     public function deleteFile(string $fileName): void
     {
         $path = $this->absolutePath($fileName);
-        if (file_exists($path)){
+        if (file_exists($path)) {
             $this->removeFileObjectFromAllFiles($fileName);
             unlink($path);
         }
